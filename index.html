@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Gerar QR Code PIX</title>
+</head>
+<body>
+    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <div id="main-content">
+        <h1 id="h1-pix">Gerar QR Code PIX</h1>
+        <div id="qr-code-content">
+            <input type="number" id="pix_value" placeholder="Digite o valor" required>
+            <button id="generate_qr_code_button">Gerar QR Code</button>
+        </div>
+        
+        <div id="qr-code-container"></div>
+        
+        <button id="copy_payload_button">Copiar Pix</button>
+        <div id="copy_success_message" style="display: none; color: green;">Copiado com sucesso</div>   
+    </div>    
+    <script src="src/main.js"></script>
+</body>
+</html>
