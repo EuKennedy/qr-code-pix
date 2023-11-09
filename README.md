@@ -5,3 +5,8 @@ O site é js puro, e não necessita de nenhuma instalação, apenas da importaç
 Segue o link da biblioteca: https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js
 
 Para rodar o projeto e personalizar os dados basta apenas inserir eles nas variaveis de pix_Key, destinatario e cidade.
+
+
+Caso queira acessar o projeto: https://eukennedy.github.io/qr-code-pix/
+
+Aproveita e faz um pix para esse pobre dev rsrs.
