@@ -6,9 +6,9 @@
                 var pix_length_value = pix_value.length;
                 var pix_lengthStr = pix_length_value.toString();
                 var pix_lengthFormatted = pix_lengthStr.padStart(2, '0'); // Formata para sempre ter dois dígitos
-                var pix_key = '+5531984956383'; // Altere Para Seu celular pix (Sempre deixe chave formato celular)
+                var pix_key = '+5531987313922'; // Altere Para Seu celular pix (Sempre deixe chave formato celular)
                 var pixlength = pix_key.length
-                var destinatario = 'Kennedy Rodrigues G' // digite aqui o destinatário
+                var destinatario = 'Jhonatan R Oliveira' // digite aqui o destinatário
                 var destinatariolength = destinatario.length // Conta as caracteres
                 var cidade = 'Belo Horizonte' // Digite aqui a cidade com máximo de 24 caracteres
                 var cidadelength = cidade.length // conta as caracteres
