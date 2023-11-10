@@ -1,6 +1,6 @@
 O site é um gerador de QR Code Pix automático que desenvolvi para um cliente.
 
-O código inteiro foi feito com JS puro, portanto não há depedências, bastanto assim apenas a importação da biblioteca qrcodejs.
+O código inteiro foi feito com JS puro, portanto não há depedências, bastando assim apenas a importação da biblioteca qrcodejs.
 
 Segue o link da biblioteca: https://github.com/davidshimjs/qrcodejs
 
@@ -10,7 +10,7 @@ Segue o link de ambas documentações abaixo.
 
 Manual Pix: https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/II_ManualdePadroesparaIniciacaodoPix.pdf
 
-Manul QR CODE BR: https://www.bcb.gov.br/content/estabilidadefinanceira/spb_docs/ManualBRCode.pdf
+Manual QR CODE BR: https://www.bcb.gov.br/content/estabilidadefinanceira/spb_docs/ManualBRCode.pdf
 
 -----------------------------------------------------------------------------------------------------------------------------------------.
 
