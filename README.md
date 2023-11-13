@@ -16,4 +16,4 @@ Para personalizar o projeto para seus dados, insira os valores nos campos de `pi
 [Gerador de QR Code Pix](https://eukennedy.github.io/qr-code-pix/)
 
 ## Contato
-Sinta-se à vontade para entrar em contato via [Instagram](https://www.instagram.com/knndy.rodrigues/). Aproveite e faça um Pix para este pobre dev! 😄
+Sinta-se à vontade para entrar em contato comigo via [Instagram](https://www.instagram.com/knndy.rodrigues/). 😄! 
