@@ -1,6 +1,6 @@
 # Gerador de QR Code Pix Automático
 
-![Demonstração](link-para-imagem-ou-gif)
+![Demonstração](https://github.com/EuKennedy/qr-code-pix/blob/main/img-demo/demo-qr-code-pix.gif)
 
 ## Descrição
 O site é um gerador de QR Code Pix automático desenvolvido com JavaScript puro. Não possui dependências, exceto pela biblioteca [QRCodeJS](https://github.com/davidshimjs/qrcodejs).
