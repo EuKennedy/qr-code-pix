@@ -3,7 +3,7 @@
 ![Demonstração](https://github.com/EuKennedy/qr-code-pix/blob/main/img-demo/demo-qr-code-pix.gif)
 
 ## Descrição
-O site é um gerador de QR Code Pix automático desenvolvido com JavaScript puro. Não possui dependências, exceto pela biblioteca [QRCodeJS](https://github.com/davidshimjs/qrcodejs).
+O site é um gerador de QR Code Pix automático desenvolvido com JavaScript puro, que criei para um cliente. Não possui dependências, exceto pela biblioteca [QRCodeJS](https://github.com/davidshimjs/qrcodejs).
 
 ## Documentação
 - [Manual Pix do Banco Central do Brasil](https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/II_ManualdePadroesparaIniciacaodoPix.pdf)
