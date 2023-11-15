@@ -1,23 +1,19 @@
-O site é um gerador de QR Code Pix automático que desenvolvi para um cliente.
+# Gerador de QR Code Pix Automático
 
-O código inteiro foi feito com JS puro, portanto não há depedências, bastanto assim apenas a importação da biblioteca qrcodejs.
+![Demonstração](https://github.com/EuKennedy/qr-code-pix/blob/main/img-demo/demo-qr-code-pix.gif)
 
-Segue o link da biblioteca: https://github.com/davidshimjs/qrcodejs
+## Descrição
+O site é um gerador de QR Code Pix automático desenvolvido com JavaScript puro, que criei para um cliente. Não possui dependências, exceto pela biblioteca [QRCodeJS](https://github.com/davidshimjs/qrcodejs).
 
-Para desenvolver esse código li a documentação do Manual Pix do BANCO CENTRAL DO BRASIL, e do QR CODE PIX também do BANCO CENTRAL DO BRASIL.
+## Documentação
+- [Manual Pix do Banco Central do Brasil](https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/II_ManualdePadroesparaIniciacaodoPix.pdf)
+- [Manual QR Code BR do Banco Central do Brasil](https://www.bcb.gov.br/content/estabilidadefinanceira/spb_docs/ManualBRCode.pdf)
 
-Segue o link de ambas documentações abaixo.
+## Como Personalizar
+Para personalizar o projeto para seus dados, insira os valores nos campos de `pix_key`, `destinatario` e `cidade`.
 
-Manual Pix: https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/II_ManualdePadroesparaIniciacaodoPix.pdf
+## Acesse o Projeto
+[Gerador de QR Code Pix](https://eukennedy.github.io/qr-code-pix/)
 
-Manul QR CODE BR: https://www.bcb.gov.br/content/estabilidadefinanceira/spb_docs/ManualBRCode.pdf
-
------------------------------------------------------------------------------------------------------------------------------------------.
-
-Para personalizar o projeto para seus dados basta apenas inserir os valores nos campos de Pix_key, destinatario e cidade.
-
-Caso queira acessar o projeto: https://eukennedy.github.io/qr-code-pix/
-
-Se precisar entrar em contato me procure pelo instagram: https://www.instagram.com/knndy.rodrigues/
-
-Aproveita e faz um pix para esse pobre dev rsrs.
+## Contato
+Sinta-se à vontade para entrar em contato comigo via [Instagram](https://www.instagram.com/knndy.rodrigues/). 😄! 
