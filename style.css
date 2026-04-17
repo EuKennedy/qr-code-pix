@@ -110,19 +110,8 @@ body {
 
 .brand {
     display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
-.brand__badge {
-    width: 52px;
-    height: 52px;
-    display: grid;
-    place-items: center;
-    border-radius: 16px;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--violet) 100%);
-    color: white;
-    box-shadow: 0 12px 30px -10px rgba(50, 188, 173, 0.55);
+    flex-direction: column;
+    gap: 4px;
 }
 
 .brand__eyebrow {
@@ -411,22 +400,6 @@ body {
     display: flex;
     gap: 10px;
     width: 100%;
-}
-
-.app__footer {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
-
-.app__footer a {
-    color: var(--accent-strong);
-    text-decoration: none;
-    font-weight: 600;
-}
-
-.app__footer a:hover {
-    text-decoration: underline;
 }
 
 .toast {
