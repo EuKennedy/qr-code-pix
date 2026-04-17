@@ -206,6 +206,13 @@ body {
     letter-spacing: 0.01em;
 }
 
+.field__hint {
+    font-size: 0.72rem;
+    font-weight: 400;
+    color: rgba(147, 160, 189, 0.7);
+    margin-left: 4px;
+}
+
 .field input {
     appearance: none;
     background: rgba(7, 11, 24, 0.55);

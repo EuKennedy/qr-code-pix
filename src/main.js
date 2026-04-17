@@ -59,6 +59,40 @@ function sanitizeText(value, max) {
         .slice(0, max);
 }
 
+function normalizePixKey(raw) {
+    const value = raw.trim();
+    if (!value) return "";
+
+    if (value.includes("@")) return value.toLowerCase();
+
+    const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    if (uuid.test(value)) return value.toLowerCase();
+
+    if (value.startsWith("+")) {
+        const digits = value.slice(1).replace(/\D/g, "");
+        return digits ? `+${digits}` : "";
+    }
+
+    const digits = value.replace(/\D/g, "");
+    if (!digits) return value;
+
+    if (digits.length === 14) return digits;
+    if (digits.length === 13 && digits.startsWith("55")) return `+${digits}`;
+    if (digits.length === 12 && digits.startsWith("55")) return `+${digits}`;
+    if (digits.length === 11) {
+        const ddd = parseInt(digits.slice(0, 2), 10);
+        const isMobile = digits[2] === "9";
+        if (ddd >= 11 && ddd <= 99 && isMobile) return `+55${digits}`;
+        return digits;
+    }
+    if (digits.length === 10) {
+        const ddd = parseInt(digits.slice(0, 2), 10);
+        if (ddd >= 11 && ddd <= 99) return `+55${digits}`;
+    }
+
+    return value;
+}
+
 function tlv(id, value) {
     const length = value.length.toString().padStart(2, "0");
     return `${id}${length}${value}`;
@@ -134,21 +168,14 @@ function showToast(message, variant = "success") {
 }
 
 function validate(fields) {
-    const errors = [];
-
-    if (!fields.key) errors.push({ input: el.key, message: "Informe a chave Pix." });
-    if (!fields.name) errors.push({ input: el.name, message: "Informe o nome do recebedor." });
-    if (!fields.city) errors.push({ input: el.city, message: "Informe a cidade." });
-
-    [el.key, el.name, el.city].forEach(input => input.removeAttribute("aria-invalid"));
-    errors.forEach(err => err.input.setAttribute("aria-invalid", "true"));
-
-    if (errors.length) {
-        errors[0].input.focus();
-        showToast(errors[0].message, "error");
+    el.key.removeAttribute("aria-invalid");
+    if (!fields.key) {
+        el.key.setAttribute("aria-invalid", "true");
+        el.key.focus();
+        showToast("Informe a chave Pix.", "error");
+        return false;
     }
-
-    return errors.length === 0;
+    return true;
 }
 
 async function copyToClipboard(text) {
@@ -176,10 +203,15 @@ async function copyToClipboard(text) {
 function handleSubmit(event) {
     event.preventDefault();
 
+    const normalizedKey = normalizePixKey(el.key.value);
+    if (normalizedKey && normalizedKey !== el.key.value) {
+        el.key.value = normalizedKey;
+    }
+
     const fields = {
-        key: el.key.value.trim(),
-        name: sanitizeText(el.name.value, 25),
-        city: sanitizeText(el.city.value, 15),
+        key: normalizedKey,
+        name: sanitizeText(el.name.value, 25) || DEFAULTS.name,
+        city: sanitizeText(el.city.value, 15) || DEFAULTS.city,
         amount: parseCurrency(el.value.value)
     };
 
@@ -211,15 +243,16 @@ function handleDownload() {
     document.body.removeChild(link);
 }
 
-function prefillDefaults() {
-    el.key.value = DEFAULTS.key;
-    el.name.value = DEFAULTS.name;
-    el.city.value = DEFAULTS.city;
-}
-
 function bindEvents() {
     el.value.addEventListener("input", event => {
         event.target.value = formatCurrencyInput(event.target.value);
+    });
+
+    el.key.addEventListener("blur", event => {
+        const normalized = normalizePixKey(event.target.value);
+        if (normalized && normalized !== event.target.value) {
+            event.target.value = normalized;
+        }
     });
 
     el.form.addEventListener("submit", handleSubmit);
@@ -227,5 +260,4 @@ function bindEvents() {
     el.download.addEventListener("click", handleDownload);
 }
 
-prefillDefaults();
 bindEvents();
