@@ -1,23 +1,166 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-    <title>Gerar QR Code PIX</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Gerador de QR Code Pix rápido, gratuito e sem complicações. Crie o seu Pix Copia e Cola em segundos.">
+    <meta name="theme-color" content="#0f172a">
+    <title>Gerador de QR Code Pix</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-    <link rel="stylesheet" href="style.css">
-    <div id="main-content">
-        <h1 id="h1-pix">Gerar QR Code PIX</h1>
-        <div id="qr-code-content">
-            <input type="text" id="pix_value" placeholder="Digite o valor" value="R$ " required>
-            <button id="generate_qr_code_button">Gerar QR Code</button>
-        </div>
-        
-        <div id="qr-code-container"></div>
-        
-        <button id="copy_payload_button">Copiar Pix</button>
-        <div id="copy_success_message" style="display: none; color: green;">Copiado com sucesso</div>   
-    </div> 
-    <script src="src/main.js"></script>
+    <div class="background">
+        <div class="glow glow--one"></div>
+        <div class="glow glow--two"></div>
+        <div class="glow glow--three"></div>
+    </div>
+
+    <main class="app">
+        <header class="app__header">
+            <div class="brand">
+                <span class="brand__badge" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 2 22 12 12 22 2 12z"></path>
+                        <path d="M7 12h10M12 7v10"></path>
+                    </svg>
+                </span>
+                <div>
+                    <p class="brand__eyebrow">Pagamentos instantâneos</p>
+                    <h1 class="brand__title">Gerador de QR Code Pix</h1>
+                </div>
+            </div>
+            <p class="app__lead">
+                Preencha os dados ao lado, gere seu <strong>Pix Copia e Cola</strong> e
+                compartilhe o QR Code em segundos &mdash; sem taxas, sem cadastro.
+            </p>
+        </header>
+
+        <section class="card" aria-labelledby="form-title">
+            <form id="pix-form" class="form" novalidate>
+                <h2 id="form-title" class="form__title">Dados da cobrança</h2>
+
+                <div class="field">
+                    <label for="pix-key">Chave Pix</label>
+                    <input
+                        type="text"
+                        id="pix-key"
+                        name="pix-key"
+                        autocomplete="off"
+                        placeholder="CPF, CNPJ, e-mail, celular ou chave aleatória"
+                        required
+                    >
+                </div>
+
+                <div class="field">
+                    <label for="pix-name">Nome do recebedor</label>
+                    <input
+                        type="text"
+                        id="pix-name"
+                        name="pix-name"
+                        maxlength="25"
+                        autocomplete="off"
+                        placeholder="Ex.: Kennedy Rodrigues"
+                        required
+                    >
+                </div>
+
+                <div class="field-row">
+                    <div class="field">
+                        <label for="pix-city">Cidade</label>
+                        <input
+                            type="text"
+                            id="pix-city"
+                            name="pix-city"
+                            maxlength="15"
+                            autocomplete="off"
+                            placeholder="Ex.: Belo Horizonte"
+                            required
+                        >
+                    </div>
+
+                    <div class="field">
+                        <label for="pix-value">Valor</label>
+                        <input
+                            type="text"
+                            id="pix-value"
+                            name="pix-value"
+                            inputmode="numeric"
+                            autocomplete="off"
+                            placeholder="R$ 0,00"
+                        >
+                    </div>
+                </div>
+
+                <button type="submit" id="pix-generate" class="btn btn--primary">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                        <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                        <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                        <path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20h1"></path>
+                    </svg>
+                    Gerar QR Code
+                </button>
+            </form>
+
+            <aside class="preview" aria-live="polite">
+                <div id="qr-placeholder" class="preview__placeholder">
+                    <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+                        <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+                        <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+                        <path d="M14 14h3v3h-3zM20 14v3M14 20h3M20 20h1"></path>
+                    </svg>
+                    <p>Seu QR Code vai aparecer aqui.</p>
+                </div>
+
+                <div id="qr-result" class="preview__result" hidden>
+                    <div class="preview__badge" id="qr-amount">R$ 0,00</div>
+                    <div id="qr-code" class="preview__code"></div>
+                    <p class="preview__name" id="qr-name"></p>
+
+                    <div class="preview__payload">
+                        <label for="pix-payload">Pix Copia e Cola</label>
+                        <textarea id="pix-payload" readonly rows="3"></textarea>
+                    </div>
+
+                    <div class="preview__actions">
+                        <button type="button" id="pix-copy" class="btn btn--ghost">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <rect x="9" y="9" width="12" height="12" rx="2"></rect>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                            </svg>
+                            <span>Copiar Pix</span>
+                        </button>
+
+                        <button type="button" id="pix-download" class="btn btn--ghost">
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M12 3v12"></path>
+                                <path d="m7 10 5 5 5-5"></path>
+                                <path d="M20 21H4"></path>
+                            </svg>
+                            <span>Baixar PNG</span>
+                        </button>
+                    </div>
+                </div>
+            </aside>
+        </section>
+
+        <footer class="app__footer">
+            <p>Feito com <span aria-hidden="true">&#10084;</span> por <a href="https://www.instagram.com/knndy.rodrigues/" target="_blank" rel="noopener">Kennedy Rodrigues</a>.</p>
+        </footer>
+    </main>
+
+    <div id="toast" class="toast" role="status" aria-live="polite" hidden>
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M20 6 9 17l-5-5"></path>
+        </svg>
+        <span id="toast-message">Pronto!</span>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <script src="src/main.js" defer></script>
 </body>
 </html>
