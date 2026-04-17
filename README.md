@@ -1,23 +1,38 @@
-# Gerador de QR Code Pix Automático
+# Gerador de QR Code Pix
 
 ![Demonstração](https://github.com/EuKennedy/qr-code-pix/blob/main/img-demo/demo-qr-code-pix.gif)
 
-## Descrição
-O site é um gerador de QR Code Pix automático desenvolvido com JavaScript puro, que criei para um cliente. Não possui dependências, exceto pela biblioteca [QRCodeJS](https://github.com/davidshimjs/qrcodejs).
+## Sobre
+Gerador de QR Code Pix feito com **HTML, CSS e JavaScript puros**, sem
+frameworks. A interface é responsiva, tem tema escuro com gradientes e usa a
+biblioteca [QRCodeJS](https://github.com/davidshimjs/qrcodejs) para renderizar o
+código.
 
-## Documentação
+## Recursos
+- Geração do payload Pix (BR Code) seguindo o padrão EMV / Banco Central.
+- Cálculo do CRC16-CCITT feito no front.
+- Validação dos campos e feedback em tempo real (toasts).
+- Cópia do "Pix Copia e Cola" com fallback para navegadores antigos.
+- Download do QR Code em PNG com um clique.
+- Layout responsivo (mobile, tablet e desktop).
+
+## Como usar
+1. Abra o `index.html` no navegador.
+2. Preencha a **chave Pix**, o **nome do recebedor**, a **cidade** e,
+   opcionalmente, o **valor**.
+3. Clique em **Gerar QR Code** para visualizar o QR Code e o código
+   "Copia e Cola".
+4. Use os botões **Copiar Pix** ou **Baixar PNG** para compartilhar.
+
+> Dica: para pré-preencher seus dados, edite a constante `DEFAULTS` no início
+> de `src/main.js`.
+
+## Documentação de referência
 - [Manual Pix do Banco Central do Brasil](https://www.bcb.gov.br/content/estabilidadefinanceira/pix/Regulamento_Pix/II_ManualdePadroesparaIniciacaodoPix.pdf)
-- [Manual QR Code BR do Banco Central do Brasil](https://www.bcb.gov.br/content/estabilidadefinanceira/spb_docs/ManualBRCode.pdf)
+- [Manual BR Code do Banco Central do Brasil](https://www.bcb.gov.br/content/estabilidadefinanceira/spb_docs/ManualBRCode.pdf)
 
-## Como Personalizar
-Para personalizar o projeto para seus dados, insira os valores nos campos de `pix_key`, `destinatario` e `cidade`.
-
-## Acesse o Projeto
+## Acesse online
 [Gerador de QR Code Pix](https://eukennedy.github.io/qr-code-pix/)
 
-## Projeto em produção no site de um cliente.
-![ezgif com-crop (4)](https://github.com/EuKennedy/qr-code-pix/assets/115658996/631649ac-2c74-4391-9a77-131261f8189e)
-
-
 ## Contato
-Sinta-se à vontade para entrar em contato comigo via [Instagram](https://www.instagram.com/knndy.rodrigues/). 😄! 
+Me chame no [Instagram](https://www.instagram.com/knndy.rodrigues/).
