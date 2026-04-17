@@ -1,104 +1,231 @@
-var payload = "";
+const DEFAULTS = {
+    key: "+5531984956383",
+    name: "Kennedy Rodrigues G",
+    city: "Belo Horizonte"
+};
 
-// Função para formatar o valor da moeda
-function formatCurrency(input) {
-    input = input.replace(/\D/g, '');
-    input = (input / 100).toFixed(2);
-    return 'R$ ' + input;
-}
+const SELECTORS = {
+    form: "#pix-form",
+    key: "#pix-key",
+    name: "#pix-name",
+    city: "#pix-city",
+    value: "#pix-value",
+    generate: "#pix-generate",
+    copy: "#pix-copy",
+    download: "#pix-download",
+    placeholder: "#qr-placeholder",
+    result: "#qr-result",
+    code: "#qr-code",
+    amount: "#qr-amount",
+    displayName: "#qr-name",
+    payload: "#pix-payload",
+    toast: "#toast",
+    toastMessage: "#toast-message"
+};
 
-// Adiciona evento de input para formatar o valor da moeda
-document.getElementById('pix_value').addEventListener('input', function () {
-    this.value = formatCurrency(this.value);
+const el = Object.fromEntries(
+    Object.entries(SELECTORS).map(([k, sel]) => [k, document.querySelector(sel)])
+);
+
+const state = {
+    payload: "",
+    qr: null
+};
+
+const currencyFormatter = new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL"
 });
 
-// Bloco principal: Gera os dados necessários para o Payload PIX
-document.getElementById('generate_qr_code_button').addEventListener('click', generateQRCode);
-
-document.getElementById('copy_payload_button').addEventListener('click', copyPayloadToClipboard);
-
-// Função principal para gerar o QR Code
-function generateQRCode() {
-    var rawPixValue = document.getElementById('pix_value').value;
-    var pixValue = parseFloat(rawPixValue.replace('R$', '').trim().replace(',', '.')) || 0;
-
-    var pixKey = '+5531984956383'; // Altere para qualquer chave PIX: Celular, CPF, CNPJ ou chave aleatória.
-    var destinatario = 'Kennedy Rodrigues G'; // Digite aqui o destinatário
-    var cidade = 'Belo Horizonte'; // Digite aqui a cidade com máximo de 24 caracteres
-
-    // Construindo o Payload PIX a partir dos dados adicionados.
-    payload = buildPixPayload(pixKey, pixValue, destinatario, cidade);
-
-    // Calcula o CRC16 e o adiciona ao payload PIX
-    var crc16 = getCRC16(payload);
-    payload += '6304' + crc16.toString(16).toUpperCase();
-
-    // Exibe o QR Code
-    displayQRCode(payload);
-
-    // Habilita o botão de copiar payload
-    document.getElementById('copy_payload_button').disabled = false;
+function formatCurrencyInput(raw) {
+    const digits = raw.replace(/\D/g, "");
+    if (!digits) return "";
+    const cents = parseInt(digits, 10) / 100;
+    return currencyFormatter.format(cents);
 }
 
-// Função para construir o Payload PIX
-function buildPixPayload(pixKey, pixValue, destinatario, cidade) {
-    var pixValueFormatted = pixValue.toFixed(2);
-    var pixLengthValue = pixValueFormatted.length;
-    var pixLengthFormatted = pixLengthValue.toString().padStart(2, '0');
-    var destinatarioLength = destinatario.length;
-    var cidadeLength = cidade.length.toString().padStart(2, '0');
-
-    return '00020126360014BR.GOV.BCB.PIX01' + pixKey.length + pixKey +
-        '52040000530398654' + pixLengthFormatted + pixValueFormatted +
-        '5802BR59' + destinatarioLength + destinatario +
-        '60' + cidadeLength + cidade + '62130509pixcartao';
+function parseCurrency(value) {
+    if (!value) return 0;
+    const digits = value.replace(/\D/g, "");
+    return digits ? parseInt(digits, 10) / 100 : 0;
 }
 
-// Função para exibir o QR Code
-function displayQRCode(payload) {
-    var qrcode = new QRCode(document.getElementById('qr-code-container'), {
-        text: payload.toString(),
-        width: 228,
-        height: 228,
-    });
+function sanitizeText(value, max) {
+    return value
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^\x20-\x7E]/g, "")
+        .trim()
+        .slice(0, max);
 }
 
-// Função para copiar o valor do payload para a área de transferência
-function copyPayloadToClipboard() {
-    var tempInput = document.createElement("input");
-    tempInput.value = payload;
-    document.body.appendChild(tempInput);
-    tempInput.select();
-    document.execCommand("copy");
-    document.body.removeChild(tempInput);
-
-    // Exibe mensagem de sucesso
-    var copySuccessMessage = document.getElementById('copy_success_message');
-    copySuccessMessage.style.display = 'block';
-
-    // Oculta a mensagem após alguns segundos
-    setTimeout(function () {
-        copySuccessMessage.style.display = 'none';
-    }, 2000); // A mensagem será ocultada após 2 segundos (2000 milissegundos)
+function tlv(id, value) {
+    const length = value.length.toString().padStart(2, "0");
+    return `${id}${length}${value}`;
 }
 
-// Função para calcular o CRC16
-function getCRC16(payload) {
-    payload += '6304';
-    var polinomio = 0x1021;
-    var resultado = 0xFFFF;
-    var length = payload.length;
+function buildPayload({ key, name, city, amount }) {
+    const merchantAccount = tlv("00", "BR.GOV.BCB.PIX") + tlv("01", key);
+    const additional = tlv("05", "***");
 
-    for (var offset = 0; offset < length; offset++) {
-        resultado ^= (payload.charCodeAt(offset) << 8);
+    let payload = "";
+    payload += tlv("00", "01");
+    payload += tlv("26", merchantAccount);
+    payload += tlv("52", "0000");
+    payload += tlv("53", "986");
+    if (amount > 0) {
+        payload += tlv("54", amount.toFixed(2));
+    }
+    payload += tlv("58", "BR");
+    payload += tlv("59", name);
+    payload += tlv("60", city);
+    payload += tlv("62", additional);
+    payload += "6304";
 
-        for (var bitwise = 0; bitwise < 8; bitwise++) {
-            if ((resultado <<= 1) & 0x10000) {
-                resultado ^= polinomio;
-            }
-            resultado &= 0xFFFF;
+    return payload + crc16(payload);
+}
+
+function crc16(payload) {
+    const polynomial = 0x1021;
+    let result = 0xffff;
+
+    for (let i = 0; i < payload.length; i++) {
+        result ^= payload.charCodeAt(i) << 8;
+        for (let bit = 0; bit < 8; bit++) {
+            result = (result & 0x8000) ? ((result << 1) ^ polynomial) : (result << 1);
+            result &= 0xffff;
         }
     }
 
-    return resultado;
+    return result.toString(16).toUpperCase().padStart(4, "0");
 }
+
+function renderQRCode(payload) {
+    el.code.innerHTML = "";
+    state.qr = new QRCode(el.code, {
+        text: payload,
+        width: 220,
+        height: 220,
+        colorDark: "#070b18",
+        colorLight: "#ffffff",
+        correctLevel: QRCode.CorrectLevel.M
+    });
+}
+
+function showResult({ name, amount }) {
+    el.placeholder.hidden = true;
+    el.result.hidden = false;
+    el.amount.textContent = amount > 0 ? currencyFormatter.format(amount) : "Valor livre";
+    el.displayName.textContent = name;
+    el.payload.value = state.payload;
+}
+
+function showToast(message, variant = "success") {
+    el.toastMessage.textContent = message;
+    el.toast.classList.toggle("toast--error", variant === "error");
+    el.toast.hidden = false;
+    requestAnimationFrame(() => el.toast.setAttribute("data-open", "true"));
+
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(() => {
+        el.toast.removeAttribute("data-open");
+        setTimeout(() => (el.toast.hidden = true), 250);
+    }, 2200);
+}
+
+function validate(fields) {
+    const errors = [];
+
+    if (!fields.key) errors.push({ input: el.key, message: "Informe a chave Pix." });
+    if (!fields.name) errors.push({ input: el.name, message: "Informe o nome do recebedor." });
+    if (!fields.city) errors.push({ input: el.city, message: "Informe a cidade." });
+
+    [el.key, el.name, el.city].forEach(input => input.removeAttribute("aria-invalid"));
+    errors.forEach(err => err.input.setAttribute("aria-invalid", "true"));
+
+    if (errors.length) {
+        errors[0].input.focus();
+        showToast(errors[0].message, "error");
+    }
+
+    return errors.length === 0;
+}
+
+async function copyToClipboard(text) {
+    if (navigator.clipboard?.writeText) {
+        try {
+            await navigator.clipboard.writeText(text);
+            return true;
+        } catch (err) {
+            /* fallback below */
+        }
+    }
+
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    const ok = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    return ok;
+}
+
+function handleSubmit(event) {
+    event.preventDefault();
+
+    const fields = {
+        key: el.key.value.trim(),
+        name: sanitizeText(el.name.value, 25),
+        city: sanitizeText(el.city.value, 15),
+        amount: parseCurrency(el.value.value)
+    };
+
+    if (!validate(fields)) return;
+
+    state.payload = buildPayload(fields);
+    renderQRCode(state.payload);
+    showResult(fields);
+    el.copy.disabled = false;
+    el.download.disabled = false;
+}
+
+async function handleCopy() {
+    if (!state.payload) return;
+    const ok = await copyToClipboard(state.payload);
+    showToast(ok ? "Pix copiado!" : "Não foi possível copiar.", ok ? "success" : "error");
+}
+
+function handleDownload() {
+    const image = el.code.querySelector("img, canvas");
+    if (!image) return;
+
+    const source = image.tagName === "IMG" ? image.src : image.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = source;
+    link.download = "qr-code-pix.png";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function prefillDefaults() {
+    el.key.value = DEFAULTS.key;
+    el.name.value = DEFAULTS.name;
+    el.city.value = DEFAULTS.city;
+}
+
+function bindEvents() {
+    el.value.addEventListener("input", event => {
+        event.target.value = formatCurrencyInput(event.target.value);
+    });
+
+    el.form.addEventListener("submit", handleSubmit);
+    el.copy.addEventListener("click", handleCopy);
+    el.download.addEventListener("click", handleDownload);
+}
+
+prefillDefaults();
+bindEvents();
